@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="CMakePresetLoader">{
+  &quot;useNewFormat&quot;: true
+}</component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="58bba719-b025-43d8-b1f4-85148c9346ef" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/builtins.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/builtins2.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dollar_signs.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/env.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/errno.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/exec.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/heredoc.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/parsing.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pipe.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/redirect.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/signal.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/split_pipe.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils.o" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2ODzsthbqBX9pmVcBmfGiEpDaNw" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/nico/Desktop/test&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/testdir" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="58bba719-b025-43d8-b1f4-85148c9346ef" name="Changes" comment="" />
+      <created>1681110150840</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1681110150840</updated>
+      <workItem from="1681110152500" duration="5815000" />
+      <workItem from="1681117789389" duration="13801000" />
+      <workItem from="1681132931314" duration="29455000" />
+      <workItem from="1681207037212" duration="2832000" />
+      <workItem from="1681210871348" duration="3637000" />
+      <workItem from="1681215432726" duration="460000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
