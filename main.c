@@ -44,8 +44,6 @@ void	checkline(t_shell *shell)
 			return ;
 		parsing(shell);
 		loop_exec(shell);
-		//exec_cmds(shell, shell->tokens->next);
-		//free_all(shell);
 		free_completed_tab(shell->env_tab);
 	}
 }

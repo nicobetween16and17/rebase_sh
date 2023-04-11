@@ -38,8 +38,6 @@ typedef struct s_shell
 {
 	char	*line;
 	char	**env_tab;
-	int		pipe_in[2];
-	int		pipe_out[2];
 	t_env	*env;
 	pid_t 	pid[400];
 	int		n_pid;
@@ -118,6 +116,7 @@ void	ft_close(int fd);
 void	reset_std(t_shell *sh);
 void	close_fds(t_shell *sh);
 void	reset_fds(t_shell *sh);
+void	ft_close_pipe(int fd[2], t_shell *sh);
 
 //builtins
 int		ft_exit(char **params, t_shell *shell);
@@ -136,6 +135,7 @@ int		get_redir_type(char *rd);
 void	redirect(t_shell *sh, int type, char *f);
 int		built_in(char **cmd, t_shell *sh);
 void	loop_exec(t_shell *sh);
+
 
 //heredoc
 int		here_doc(char *delimiter, t_shell *sh);

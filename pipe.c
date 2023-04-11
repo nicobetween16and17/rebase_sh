@@ -6,6 +6,13 @@ void	ft_close(int fd)
 		close(fd);
 }
 
+void	ft_close_pipe(int fd[2], t_shell *sh)
+{
+	if (close(fd[0]) == -1 && sh->pipe_error++)
+		perror("pipe");
+	if (close(fd[1]) == -1 && sh->pipe_error++)
+		perror("pipe");
+}
 /*
  * replace the standard inputs with the copy of the original ones to
  * reset to status qo
