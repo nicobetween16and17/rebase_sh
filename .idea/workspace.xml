@@ -13,17 +13,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="58bba719-b025-43d8-b1f4-85148c9346ef" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/testdir/outfile.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/builtins.o" beforeDir="false" afterPath="$PROJECT_DIR$/builtins.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/builtins2.o" beforeDir="false" afterPath="$PROJECT_DIR$/builtins2.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/env.c" beforeDir="false" afterPath="$PROJECT_DIR$/env.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/env.o" beforeDir="false" afterPath="$PROJECT_DIR$/env.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/exec.c" beforeDir="false" afterPath="$PROJECT_DIR$/exec.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exec.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/exec.o" beforeDir="false" afterPath="$PROJECT_DIR$/exec.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/heredoc.o" beforeDir="false" afterPath="$PROJECT_DIR$/heredoc.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/libft/libft.a" beforeDir="false" afterPath="$PROJECT_DIR$/libft/libft.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.o" beforeDir="false" afterPath="$PROJECT_DIR$/main.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minishell" beforeDir="false" afterPath="$PROJECT_DIR$/minishell" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/minishell.h" beforeDir="false" afterPath="$PROJECT_DIR$/minishell.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parsing.c" beforeDir="false" afterPath="$PROJECT_DIR$/parsing.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parsing.o" beforeDir="false" afterPath="$PROJECT_DIR$/parsing.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pipe.o" beforeDir="false" afterPath="$PROJECT_DIR$/pipe.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test" beforeDir="false" afterPath="$PROJECT_DIR$/test" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testdir/outfile.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test2" beforeDir="false" afterPath="$PROJECT_DIR$/test2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils.c" beforeDir="false" afterPath="$PROJECT_DIR$/utils.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils.o" beforeDir="false" afterPath="$PROJECT_DIR$/utils.o" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,7 +88,7 @@
       <workItem from="1681132931314" duration="29455000" />
       <workItem from="1681207037212" duration="2832000" />
       <workItem from="1681210871348" duration="3637000" />
-      <workItem from="1681215432726" duration="7705000" />
+      <workItem from="1681215432726" duration="10565000" />
     </task>
     <servers />
   </component>

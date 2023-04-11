@@ -23,6 +23,7 @@ int	ft_strisnum(char *s)
 
 void	ft_free(void *to_free)
 {
+	printf("%p : %s\n", to_free, to_free);
 	if (to_free)
 		free(to_free);
 	to_free = NULL;

@@ -305,12 +305,17 @@ char	*get_path(char *cmd, char *path)
 		ft_free(res);
 		res = ft_strjoin(paths[i], cmd_path);
 	}
-	if (access(res, X_OK))
+	if (access(res, X_OK) && printf("set a null\n"))
+	{
 		ft_free(res);
-	free(cmd_path);
+		return (NULL);
+	}
+	ft_free(cmd_path);
 	i = -1;
-	while (paths[++i])
+	while (paths[++i] && printf("free %d\n", i))
 		ft_free(paths[i]);
+	printf("finale i = %d\n", i);
 	ft_free(paths);
+	printf("hola\n");
 	return (res);
 }

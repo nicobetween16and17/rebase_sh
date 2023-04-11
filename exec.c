@@ -37,7 +37,6 @@ void	redirect(t_shell *sh, int type, char *f)
 	}
 	if (type == INPUT)
 	{
-		printf("file is %s\n", f);
 		sh->infile = open(f, O_RDONLY);
 		if (sh->infile < 0)
 			perror("fd");
@@ -46,16 +45,10 @@ void	redirect(t_shell *sh, int type, char *f)
 		sh->outfile = open(f, O_CREAT | O_WRONLY | O_APPEND, 0777);
 	else if (type == TRUNC)
 		sh->outfile = open(f, O_CREAT | O_WRONLY | O_TRUNC, 0777);
-	if (sh->infile != 0)
-	{
-		dup2(sh->infile, 0);
+	if (sh->infile != 0 && dup2(sh->infile, 0) != -1)
 		close(sh->infile);
-	}
-	if (sh->outfile != 1)
-	{
-		dup2(sh->outfile, 1);
+	if (sh->outfile != 1 && dup2(sh->outfile, 1) != -1)
 		close(sh->outfile);
-	}
 }
 
 int	built_in(char **cmd, t_shell *sh)
@@ -84,6 +77,7 @@ void	exec_no_pipe(t_shell *sh)
 {
 	printf("no pipe\n");
 	sh->cmd_path = get_path(sh->crt_cmd[0], get_env_line(sh->env, "PATH="));
+	printf("no goes here\n");
 	sh->pid[sh->n_pid] = fork();
 	if (sh->pid[sh->n_pid] < 0)
 		return;
@@ -91,7 +85,9 @@ void	exec_no_pipe(t_shell *sh)
 		(built_in(sh->crt_cmd, sh) || execve(sh->cmd_path, sh->crt_cmd, sh->env_tab));
 	else
 	{
+		printf("1\n");
 		ft_free(sh->cmd_path);
+		printf("2\n");
 		return;
 	}
 	exit(g_signal.ret);
@@ -135,7 +131,6 @@ void	exec_pipe(t_shell *sh, int last_pipe, int first_pipe)
 			sh->old_fd[0] = new_fd[0];
 		}
 	}
-
 }
 
 void	exec_line(t_shell *sh, char *current, int last_pipe, int first_pipe)
@@ -173,6 +168,7 @@ void	loop_exec(t_shell *sh)
 		perror("pipe");
 	while (sh->splitted[++i])
 	{
+		printf("h\n");
 		exec_line(sh, sh->splitted[i], sh->splitted[i + 1] == 0, i == 0);
 		unlink(".heredoc.tmp");
 		reset_fds(sh);
