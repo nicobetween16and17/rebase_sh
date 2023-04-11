@@ -12,22 +12,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="58bba719-b025-43d8-b1f4-85148c9346ef" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/builtins.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/builtins2.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dollar_signs.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/env.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/errno.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/exec.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/heredoc.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/parsing.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/redirect.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/signal.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/split_pipe.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils.o" beforeDir="false" />
-    </list>
+    <list default="true" id="58bba719-b025-43d8-b1f4-85148c9346ef" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -85,7 +70,7 @@
       <workItem from="1681132931314" duration="29455000" />
       <workItem from="1681207037212" duration="2832000" />
       <workItem from="1681210871348" duration="3637000" />
-      <workItem from="1681215432726" duration="460000" />
+      <workItem from="1681215432726" duration="796000" />
     </task>
     <servers />
   </component>

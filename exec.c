@@ -27,10 +27,15 @@ void	redirect(t_shell *sh, int type, char *f)
 {
 	printf("%s\n", type == HDOC ? "HODC": type == INPUT ? "INPUT" : \
 	type == APPEND ? "APPEND" : type == TRUNC ? "TRUNC" : NULL);
+	sh->infile = 0;
+	sh->outfile = 1;
 	if (type == HDOC)
 	{
 		sh->infile = here_doc(f, sh);
-		if (sh->infile < 0)
+		close(sh->infile);
+		sh->infile = open(".heredoc.tmp", O_RDONLY);
+		printf("heredoc.c %d\n", sh->infile);
+		if (sh->infile < 0 && printf("error\n"))
 			sh->infile = open(".heredoc.tmp", O_CREAT | O_RDONLY | O_TRUNC, 0777);
 	}
 	if (type == INPUT)
@@ -88,28 +93,26 @@ void	exec_line(t_shell *sh, char *current, int last_pipe, int first_pipe)
 		ft_free(sh->crt_redir_filename);
 		sh->crt_redir_filename = get_filename(sh->crt_redir);
 	}
-	//print_err(1, "finish redirecting\n");
 	if (last_pipe && first_pipe && !built_in(sh->crt_cmd, sh))
 	{
 		sh->cmd_path = get_path(sh->crt_cmd[0], get_env_line(sh->env, "PATH="));
-		//print_err(1, "simple command, no pipes\n");
-		//printf("cmdpath = %s\n", sh->cmd_path);
 		sh->pid[sh->n_pid] = fork();
 		if (sh->pid[sh->n_pid] < 0)
 			return;
-		if (!sh->pid[sh->n_pid])
-		{
-			//dup2(sh->infile, 0);
-			dup2(sh->outfile, 1);
-			//close(sh->infile);
-			close(sh->outfile);
+		if (!sh->pid[sh->n_pid]) {
+			if (sh->infile != 0) {
+				dup2(sh->infile, 0);
+				close(sh->infile);
+			}
+			if (sh->outfile != 1) {
+				dup2(sh->outfile, 1);
+				close(sh->outfile);
+			}
 			execve(sh->cmd_path, sh->crt_cmd, sh->env_tab);
 		}
-
 		else
 		{
-			//ft_free(sh->cmd_path);
-			//printf("%d\n", sh->pid[sh->n_pid]);
+			ft_free(sh->cmd_path);
 			sh->n_pid++;
 			sh->pid[sh->n_pid] = 0;
 			return;
@@ -178,8 +181,9 @@ void	loop_exec(t_shell *sh)
 	{
 		//print_err(3, "line is [",sh->splitted[i],"]\n");
 		exec_line(sh, sh->splitted[i], sh->splitted[i + 1] == 0, i == 0);
-		//reset_fds(sh);
-		//reset_std(sh);
+		unlink(".heredoc.tmp");
+		reset_fds(sh);
+		reset_std(sh);
 		//print_err(1, "cat loves food yeyeye\n");
 	}
 
