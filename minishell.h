@@ -56,6 +56,7 @@ typedef struct s_shell
 	int		out;
 	int		infile;
 	int		outfile;
+	int		old_fd[2];
 }t_shell;
 
 typedef struct s_sig

@@ -72,7 +72,7 @@ char	*get_filename(char *s)
 	len = 0;
 	while (s[i] && s[i] != 32)
 		filename[len++] = s[i++];
-	filename[i] = 0;
+	filename[len] = 0;
 	if (filename[0] == '"')
 		return (free_trim(&filename, "\""));
 	return (free_trim(&filename, "'"));
@@ -104,8 +104,7 @@ char	**split_trim_redir(char *s)
 	while (split[++i])
 		if (!(str_search(split[i], "><") || (i  && \
 		str_search(split[i - 1], "><") && !has_words(split[i - 1]))))
-			(printf("valid command %s\n", split[i]) && len++);
-	printf("len = %d\n", len);
+			len++;
 	res = xmalloc(sizeof(char *) * ++len);
 	i = -1;
 	len = 0;

@@ -25,8 +25,6 @@ int		get_redir_type(char *rd)
 
 void	redirect(t_shell *sh, int type, char *f)
 {
-	printf("%s\n", type == HDOC ? "HODC": type == INPUT ? "INPUT" : \
-	type == APPEND ? "APPEND" : type == TRUNC ? "TRUNC" : NULL);
 	sh->infile = 0;
 	sh->outfile = 1;
 	if (type == HDOC)
@@ -34,21 +32,30 @@ void	redirect(t_shell *sh, int type, char *f)
 		sh->infile = here_doc(f, sh);
 		close(sh->infile);
 		sh->infile = open(".heredoc.tmp", O_RDONLY);
-		printf("heredoc.c %d\n", sh->infile);
-		if (sh->infile < 0 && printf("error\n"))
+		if (sh->infile < 0)
 			sh->infile = open(".heredoc.tmp", O_CREAT | O_RDONLY | O_TRUNC, 0777);
 	}
 	if (type == INPUT)
 	{
+		printf("file is %s\n", f);
 		sh->infile = open(f, O_RDONLY);
 		if (sh->infile < 0)
-			perror("open");
+			perror("fd");
 	}
 	if (type == APPEND)
 		sh->outfile = open(f, O_CREAT | O_WRONLY | O_APPEND, 0777);
 	else if (type == TRUNC)
 		sh->outfile = open(f, O_CREAT | O_WRONLY | O_TRUNC, 0777);
-	printf("current fds [%d->%d]\n", sh->infile, sh->outfile);
+	if (sh->infile != 0)
+	{
+		dup2(sh->infile, 0);
+		close(sh->infile);
+	}
+	if (sh->outfile != 1)
+	{
+		dup2(sh->outfile, 1);
+		close(sh->outfile);
+	}
 }
 
 int	built_in(char **cmd, t_shell *sh)
@@ -73,15 +80,71 @@ int	built_in(char **cmd, t_shell *sh)
 	return (is_built_in);
 }
 
+void	exec_no_pipe(t_shell *sh)
+{
+	printf("no pipe\n");
+	sh->cmd_path = get_path(sh->crt_cmd[0], get_env_line(sh->env, "PATH="));
+	sh->pid[sh->n_pid] = fork();
+	if (sh->pid[sh->n_pid] < 0)
+		return;
+	if (!sh->pid[sh->n_pid++])
+		(built_in(sh->crt_cmd, sh) || execve(sh->cmd_path, sh->crt_cmd, sh->env_tab));
+	else
+	{
+		ft_free(sh->cmd_path);
+		return;
+	}
+	exit(g_signal.ret);
+}
+
+void	exec_pipe(t_shell *sh, int last_pipe, int first_pipe)
+{
+	int new_fd[2];
+
+	if (!last_pipe)
+		pipe(new_fd);
+	sh->cmd_path = get_path(sh->crt_cmd[0], get_env_line(sh->env, "PATH="));
+	sh->pid[sh->n_pid] = fork();
+	if (!sh->pid[sh->n_pid++])
+	{
+		if (!first_pipe)
+		{
+			dup2(sh->old_fd[0], 0);
+			close(sh->old_fd[0]);
+			close(sh->old_fd[1]);
+		}
+		if (!last_pipe)
+		{
+			close(new_fd[0]);
+			dup2(new_fd[1], 1);
+			close(new_fd[1]);
+		}
+		(built_in(sh->crt_cmd, sh) || execve(sh->cmd_path, sh->crt_cmd, sh->env_tab));
+		exit(g_signal.ret);
+	}
+	else
+	{
+		if (!first_pipe)
+		{
+			close(sh->old_fd[0]);
+			close(sh->old_fd[1]);
+		}
+		if (!last_pipe)
+		{
+			sh->old_fd[1] = new_fd[1];
+			sh->old_fd[0] = new_fd[0];
+		}
+	}
+
+}
+
 void	exec_line(t_shell *sh, char *current, int last_pipe, int first_pipe)
 {
 	sh->crt_cmd = get_cmd_tab(current);
-	ft_printf("cmd: %s\n", sh->crt_cmd[0]);
 	sh->crt_redir = str_search(current, "><");
 	sh->crt_redir_filename = get_filename(sh->crt_redir);
 	while (sh->crt_redir)
 	{
-		printf("redirecting %s, %s, %d\n", sh->crt_redir, sh->crt_redir_filename, get_redir_type(sh->crt_redir));
 		redirect(sh, get_redir_type(sh->crt_redir), sh->crt_redir_filename);
 		if (sh->crt_redir + 1 && sh->crt_redir + 2)
 			sh->crt_redir = str_search(sh->crt_redir + 2, "><");
@@ -93,79 +156,10 @@ void	exec_line(t_shell *sh, char *current, int last_pipe, int first_pipe)
 		ft_free(sh->crt_redir_filename);
 		sh->crt_redir_filename = get_filename(sh->crt_redir);
 	}
-	if (last_pipe && first_pipe && !built_in(sh->crt_cmd, sh))
-	{
-		sh->cmd_path = get_path(sh->crt_cmd[0], get_env_line(sh->env, "PATH="));
-		sh->pid[sh->n_pid] = fork();
-		if (sh->pid[sh->n_pid] < 0)
-			return;
-		if (!sh->pid[sh->n_pid]) {
-			if (sh->infile != 0) {
-				dup2(sh->infile, 0);
-				close(sh->infile);
-			}
-			if (sh->outfile != 1) {
-				dup2(sh->outfile, 1);
-				close(sh->outfile);
-			}
-			execve(sh->cmd_path, sh->crt_cmd, sh->env_tab);
-		}
-		else
-		{
-			ft_free(sh->cmd_path);
-			sh->n_pid++;
-			sh->pid[sh->n_pid] = 0;
-			return;
-		}
-		exit(g_signal.ret);
-	}
+	if (last_pipe && first_pipe)
+		exec_no_pipe(sh);
 	else
-	{
-		//print_err(1,"complexe cmds\n");
-		sh->cmd_path = get_path(sh->crt_cmd[0], get_env_line(sh->env, "PATH="));
-		//printf("cmdpath = %s\n", sh->cmd_path);
-		if (!last_pipe && !first_pipe)
-			pipe(sh->pipe_out);
-		sh->pid[sh->n_pid] = fork();
-		if (sh->pid[sh->n_pid] < 0)
-			return ;
-		if (!sh->pid[sh->n_pid])
-		{
-			if (!first_pipe)
-			{
-				dup2(sh->pipe_in[0], sh->infile);
-				close(sh->pipe_in[0]);
-				close(sh->pipe_in[1]);
-			}
-			if (!last_pipe)
-			{
-				close(sh->pipe_out[0]);
-				dup2(sh->pipe_out[1], sh->outfile);
-				//close(sh->pipe_out[1]);
-			}
-			if (!built_in(sh->crt_cmd, sh) && execve(sh->cmd_path, sh->crt_cmd, sh->env_tab))
-				perror("pipe");
-			exit(g_signal.ret);
-		}
-		else
-		{
-			if (!first_pipe)
-			{
-				close(sh->pipe_out[0]);
-				close(sh->pipe_out[1]);
-			}
-			if (!last_pipe)
-			{
-				sh->pipe_out[0] = dup(sh->pipe_in[0]);
-				sh->pipe_out[1] = dup(sh->pipe_in[1]);
-				close(sh->pipe_in[0]);
-				close(sh->pipe_in[1]);
-			}
-		}
-	}
-	printf("goes here\n");
-	sh->n_pid++;
-	sh->pid[sh->n_pid] = 0;
+		exec_pipe(sh, last_pipe, first_pipe);
 }
 
 void	loop_exec(t_shell *sh)
@@ -179,20 +173,15 @@ void	loop_exec(t_shell *sh)
 		perror("pipe");
 	while (sh->splitted[++i])
 	{
-		//print_err(3, "line is [",sh->splitted[i],"]\n");
 		exec_line(sh, sh->splitted[i], sh->splitted[i + 1] == 0, i == 0);
 		unlink(".heredoc.tmp");
 		reset_fds(sh);
 		reset_std(sh);
-		//print_err(1, "cat loves food yeyeye\n");
 	}
-
 	i = -1;
-	while (sh->pid[++i])
+	while (++i < sh->n_pid)
 	{
-		printf("ping\n");
 		waitpid(sh->pid[i], &g_signal.status, 0);
-		printf("pong\n");
 		if (WIFEXITED(g_signal.status))
 			g_signal.ret = WEXITSTATUS(g_signal.status);
 	}
