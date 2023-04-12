@@ -71,7 +71,6 @@ int	check_forbidden(char *s)
 			}
 			if (i - start > 2 || (i - start > 1 && type == 3))
 				return (set_error(257 + print_err(3, STX, &s[i - 1], "'\n")));
-
 		}
 		(s[i] && i++);
 	}
