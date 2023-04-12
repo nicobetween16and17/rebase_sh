@@ -1,7 +1,14 @@
 #include "minishell.h"
 
+int	set_error(int error_code)
+{
+	g_signal.ret = error_code;
+	return (error_code);
+}
+
 static void	setup_herdoc(char **delimiter, t_shell *sh, int *here_doc_file)
 {
+	set_signal(1);
 	g_signal.heredoc = 1;
 	sh->tmp = ft_strjoin(*delimiter, "\n");
 	*delimiter = sh->tmp;
@@ -22,7 +29,6 @@ int	here_doc(char *delimiter, t_shell *sh)
 		return (here_doc_file);
 	while (1)
 	{
-		set_signal(1);
 		if (g_signal.heredoc == 0)
 			break ;
 		ft_putstr_fd("> ", 1);
@@ -32,10 +38,10 @@ int	here_doc(char *delimiter, t_shell *sh)
 			break ;
 		else
 			ft_putstr_fd(buffer, here_doc_file);
-		ft_free(buffer);
+		buffer = ft_free(buffer);
 	}
-	ft_free(buffer);
-	free(sh->tmp);
+	buffer = ft_free(buffer);
+	sh->tmp = ft_free(sh->tmp);
 	set_signal(0);
 	g_signal.heredoc = 0;
 	reset_std(sh);

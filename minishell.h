@@ -26,6 +26,12 @@
 # define RIGHT 6
 # define LEFT 7
 # define ABS(Value)	Value < 0 ? -Value : Value
+# define ACCES(file) (file && file[0] && file[0] == '.' && file[1] == '/') ? \
+1 : file && file[0] && file[0] == '/' ? 1 : 0
+# define SH "minishell: "
+# define PERM ": Permission denied\n"
+# define STX "minishell: syntax error near unexpected token: '"
+# define TMP ".heredoc.tmp"
 
 typedef struct s_env
 {
@@ -70,13 +76,10 @@ typedef struct s_sig
 t_sig g_signal;
 
 //utils
-void	*xmalloc(size_t size);
 void	free_completed_tab(char **tab);
 int		ft_strisnum(char *s);
-void	ft_free(void *to_free);
 void	free_completed_tab(char **tab);
 char	*empty_freeable_string(void);
-int		empty_line(char *s);
 int		ft_strcmp(const char *s1, const char *s2);
 int		array_size(char **array);
 
@@ -89,15 +92,17 @@ void	parsing(t_shell *sh);
 char	**get_cmd_tab(char	*cmd_line);
 char	*str_search(char *s, char *charset);
 char	*get_filename(char *redir);
+char	*free_trim(char **s, char *charset);
+int		is_charset(char c, char *charset);
 
 //split_pipe
-char	**split_pipe(char *s, char c);
+char	**split_pipe(char *s, char *c);
 
 //$
 void	replace_words(t_shell *shell, int i, int j);
 int		is_expandable(char *s, int i, int open);
 
-//env
+//envs
 t_env	*init_lst(char **tab);
 char	**get_env_tab(t_env *env);
 char	*get_env(char *s, t_shell *shell);
@@ -110,7 +115,12 @@ void	append_env(t_env *env, char *s, t_shell *shell);
 void	add_env_plus_equal(t_shell *shell, char *s);
 int		change_env(t_env *env, char *s);
 char	*get_path(char *cmd, char *path);
-
+int		env_in_alphabetic_order(t_env *env);
+void	free_env_lst(t_env *env);
+char	*get_simplified_arg(char *s);
+void	append_env(t_env *env, char *s, t_shell *shell);
+int		change_value(t_env *env, char *new_value);
+t_env	*get_env_side(t_env *env_lst, char *s, int side);
 //pipe
 void	ft_close(int fd);
 void	reset_std(t_shell *sh);
@@ -118,7 +128,7 @@ void	close_fds(t_shell *sh);
 void	reset_fds(t_shell *sh);
 void	ft_close_pipe(int fd[2], t_shell *sh);
 
-//builtins
+//builtins && builtins2
 int		ft_exit(char **params, t_shell *shell);
 int		ft_export(char **params, t_shell *shell);
 int		ft_unset(char **params, t_shell *shell);
@@ -126,9 +136,15 @@ int		ft_env(char **params, t_shell *shell);
 int		ft_pwd(char **params, t_shell *shell);
 int		ft_echo(char **params, t_shell *shell);
 int		ft_cd(char **params, t_shell *shell);
+int		built_in(char **cmd, t_shell *sh);
+t_env	*get_next_smallest(t_env *env, char *last);
 
 //errno
 int		print_err(int nb_arg, ...);
+int		valid_identifier(char *s);
+void	*ft_free(void *to_free);
+void	*xmalloc(size_t size);
+int		empty_line(char *s);
 
 //exec
 int		get_redir_type(char *rd);
@@ -136,8 +152,15 @@ void	redirect(t_shell *sh, int type, char *f);
 int		built_in(char **cmd, t_shell *sh);
 void	loop_exec(t_shell *sh);
 
+//redirect
+int		get_redir_type(char *rd);
+void	redirect(t_shell *sh, int type, char *f);
 
 //heredoc
 int		here_doc(char *delimiter, t_shell *sh);
+int		set_error(int error_code);
+
+//forbidden
+int		check_forbidden(char *s);
 
 #endif

@@ -1,16 +1,17 @@
 #include "minishell.h"
 
-size_t	ft_wordlen2(char *s, char c, int j)
+size_t	ft_wordlen2(char *s, char *c, int j)
 {
 	size_t	i;
 
 	i = 0;
-	while ((s[j + i] && is_btwn_q(s, j + i)) || (s[j + i] != c && s[j + i]))
+	while ((s[j + i] && is_btwn_q(s, j + i)) || (!is_charset(s[j + i], c) && \
+	s[j + i]))
 		i++;
 	return (i + 1);
 }
 
-size_t	ft_countwords2(char *s, char c)
+size_t	ft_countwords2(char *s, char *c)
 {
 	size_t	len;
 	int		i;
@@ -21,10 +22,10 @@ size_t	ft_countwords2(char *s, char c)
 		i++;
 	while (s[i])
 	{
-		if (is_btwn_q(s, i) || s[i] != c)
+		if (is_btwn_q(s, i) || !is_charset(s[i], c))
 		{
 			len++;
-			while (s[i] && (is_btwn_q(s, i) || s[i] != c))
+			while (s[i] && (is_btwn_q(s, i) || !is_charset(s[i], c)))
 				i++;
 		}
 		else
@@ -41,7 +42,7 @@ char	**ft_free_all2(char **split, int start)
 	return (0);
 }
 
-char	**split_pipe(char *s, char c)
+char	**split_pipe(char *s, char *c)
 {
 	char	**split;
 	int		i;
@@ -54,8 +55,8 @@ char	**split_pipe(char *s, char c)
 	split = xmalloc((ft_countwords2(s, c) + 1) * sizeof(char *));
 	while (s[++i])
 	{
-
-		if ((!i || (s[i - 1] == c && !is_btwn_q(s, i - 1))) && s[i] != c)
+		if ((!i || (is_charset(s[i - 1], c) && !is_btwn_q(s, i - 1))) && \
+		!is_charset(s[i], c))
 		{
 			split[k] = xmalloc((ft_wordlen2(s, c, i) + 1) * sizeof(char));
 			ft_strlcpy(split[k++], s + i, ft_wordlen2(s, c, i));

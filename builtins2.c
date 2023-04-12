@@ -1,30 +1,25 @@
 #include "minishell.h"
 
-int	valid_identifier(char *s)
+int	built_in(char **cmd, t_shell *sh)
 {
-	int	i;
-	int	first_occurence;
-	int	check;
+	int	is_built_in;
 
-	check = 0;
-	first_occurence = 0;
-	i = -1;
-	while (s[++i])
-	{
-		if (!check && first_occurence)
-			return (0);
-		((s[i] == '=' && first_occurence++) || ((s[i] != '=' && check != '"' \
-		&& check != '\'' && check != '?') && check++));
-		if (!first_occurence && s[i] == '+' && s[i + 1] == '=')
-			return (2);
-		if (!first_occurence && !ft_isalnum(s[i]) && s[i] != '_' && \
-		!(s[i] == '+' && s[i + 1] == '='))
-			return (print_err(3, "minishell: export: '", s, \
-			"': not a valid identifier\n") - 1);
-	}
-	if (!first_occurence)
-		return (3);
-	return (1);
+	is_built_in = 0;
+	if (!ft_strncmp(cmd[0], "echo", 5) && ++is_built_in)
+		g_signal.ret = ft_echo(cmd, sh);
+	else if (!ft_strncmp(cmd[0], "cd", 3) && ++is_built_in)
+		g_signal.ret = ft_cd(cmd, sh);
+	else if (!ft_strncmp(cmd[0], "pwd", 4) && ++is_built_in)
+		g_signal.ret = ft_pwd(cmd, sh);
+	else if (!ft_strncmp(cmd[0], "export", 7) && ++is_built_in)
+		g_signal.ret = ft_export(cmd, sh);
+	else if (!ft_strncmp(cmd[0], "unset", 6) && ++is_built_in)
+		g_signal.ret = ft_unset(cmd, sh);
+	else if (!ft_strncmp(cmd[0], "env", 4) && ++is_built_in)
+		g_signal.ret = ft_env(cmd, sh);
+	else if (!ft_strncmp(cmd[0], "exit", 5) && ++is_built_in)
+		g_signal.ret = ft_exit(cmd, sh);
+	return (is_built_in);
 }
 
 t_env	*get_next_smallest(t_env *env, char *last)
@@ -42,27 +37,6 @@ t_env	*get_next_smallest(t_env *env, char *last)
 	return (save);
 }
 
-/*
- * displays the environment variable in the alphabetical order and displays
- * "declare -x" in front of each
- */
-int	env_in_alphabetic_order(t_env *env)
-{
-	char	*last;
-	t_env	*current;
-
-	last = "\0";
-	while (19)
-	{
-		current = get_next_smallest(env, last);
-		if (current)
-			last = current->name;
-		else
-			break ;
-		ft_printf("declare -x %s%s\n", current->name, current->value);
-	}
-	return (0);
-}
 /*
  * check if the parameter is a valid and existing name of environment
  * and erase the line if it is

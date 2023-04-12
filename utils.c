@@ -1,15 +1,5 @@
 #include "minishell.h"
 
-void	*xmalloc(size_t size)
-{
-	void	*malloced_memory;
-
-	malloced_memory = malloc(size);
-	if (!malloced_memory)
-		exit(1);
-	return (malloced_memory);
-}
-
 int	ft_strisnum(char *s)
 {
 	int	i;
@@ -19,14 +9,6 @@ int	ft_strisnum(char *s)
 		if (!ft_isdigit(s[i]))
 			return (0);
 	return (1);
-}
-
-void	ft_free(void *to_free)
-{
-	printf("%p : %s\n", to_free, to_free);
-	if (to_free)
-		free(to_free);
-	to_free = NULL;
 }
 
 void	free_completed_tab(char **tab)
@@ -60,17 +42,6 @@ int	ft_strcmp(const char *s1, const char *s2)
 		i++;
 	}
 	return (0);
-}
-
-int	empty_line(char *s)
-{
-	int	i;
-
-	i = -1;
-	while (s[++i])
-		if (s[i] != ' ' && s[i] != '\t')
-			return (0);
-	return (1);
 }
 
 int	array_size(char **array)

@@ -51,7 +51,6 @@ void	handle_signalhdoc(int signo)
 		close(1);
 		close(g_signal.fd_hdoc);
 		g_signal.heredoc = 0;
-		//unlink(".heredoc.tmp");
 	}
 }
 

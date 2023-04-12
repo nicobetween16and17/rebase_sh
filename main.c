@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-
 /*
  * add a space at the end of the string
  */
@@ -26,6 +25,7 @@ char	*line_plus_space(t_shell *shell)
  * add the line in the history, replace the dollar signs, tokenize the line
  * and execute them. free the allocated line at the end.
  */
+//TODO checkforbidden crash et redir seule pas d'erreur
 void	checkline(t_shell *shell)
 {
 	set_signal(0);
@@ -34,7 +34,8 @@ void	checkline(t_shell *shell)
 		shell->exit = 1;
 	else
 	{
-		if (is_expandable(shell->line, ft_strlen(shell->line), 1))
+		if ((is_expandable(shell->line, ft_strlen(shell->line), 1) || \
+		check_forbidden(shell->line)) && !ft_free(shell->line))
 			return ;
 		shell->env_tab = get_env_tab(shell->env);
 		add_history(shell->line);
@@ -47,6 +48,7 @@ void	checkline(t_shell *shell)
 		free_completed_tab(shell->env_tab);
 	}
 }
+
 void	init_shell(t_shell *sh, char **env)
 {
 	sh->infile = 0;
@@ -71,5 +73,6 @@ int	main(int ac, char **av, char **env)
 	{
 		checkline(&minishell);
 	}
+	free_env_lst(minishell.env);
 	return (g_signal.ret);
 }
