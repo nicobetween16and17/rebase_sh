@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: niespana <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/12 14:33:27 by niespana          #+#    #+#             */
+/*   Updated: 2023/04/12 14:33:29 by niespana         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -26,8 +38,8 @@
 # define RIGHT 6
 # define LEFT 7
 # define ABS(Value)	Value < 0 ? -Value : Value
-# define ACCES(file) (file && file[0] && file[0] == '.' && file[1] == '/') ? \
-1 : file && file[0] && file[0] == '/' ? 1 : 0
+# define CHECK(f) (f && f[0] && f[0] == '.' && f[1] == '/') ? 1 : 0
+# define ACCES(file) CHECK(file) ? 1 : file && file[0] && file[0] == '/' ? 1 : 0
 # define SH "minishell: "
 # define PERM ": Permission denied\n"
 # define STX "minishell: syntax error near unexpected token: '"
@@ -45,7 +57,7 @@ typedef struct s_shell
 	char	*line;
 	char	**env_tab;
 	t_env	*env;
-	pid_t 	pid[400];
+	pid_t	pid[400];
 	int		n_pid;
 	char	**splitted;
 	char	**crt_cmd;
@@ -73,7 +85,7 @@ typedef struct s_sig
 	int		heredoc;
 }	t_sig;
 
-t_sig g_signal;
+t_sig	g_signal;
 
 //utils
 void	free_completed_tab(char **tab);
@@ -155,6 +167,7 @@ void	loop_exec(t_shell *sh);
 //redirect
 int		get_redir_type(char *rd);
 void	redirect(t_shell *sh, int type, char *f);
+int		acces(char *s);
 
 //heredoc
 int		here_doc(char *delimiter, t_shell *sh);

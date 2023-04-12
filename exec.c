@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: niespana <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/12 14:30:10 by niespana          #+#    #+#             */
+/*   Updated: 2023/04/12 14:30:12 by niespana         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	exec_no_pipe(t_shell *sh)
@@ -5,11 +17,11 @@ void	exec_no_pipe(t_shell *sh)
 	if (built_in(sh->crt_cmd, sh))
 		return ;
 	else if (!sh->cmd_path && print_err(3, "minishell: ", \
-	sh->crt_cmd[0], ": command not found\n"))
-	{
-		g_signal.ret = 127;
+	sh->crt_cmd[0], ": command not found\n") && set_error(127))
 		return ;
-	}
+	else if ((!sh->crt_cmd && !set_error(0)) || (access(sh->cmd_path, X_OK) && \
+	set_error(125 + print_err(3, SH, sh->crt_cmd[0], PERM))))
+		return ;
 	sh->pid[sh->n_pid] = fork();
 	if (sh->pid[sh->n_pid] < 0)
 		return ;
@@ -32,6 +44,9 @@ void	child_process(t_shell *sh, int first_pipe, int last_pipe, int new_fd[2])
 		ft_close_pipe(new_fd, sh);
 	}
 	is_bi = built_in(sh->crt_cmd, sh);
+	if ((!sh->crt_cmd && !set_error(0)) || \
+	(access(sh->cmd_path, X_OK) && print_err(3, SH, sh->crt_cmd[0], PERM)))
+		exit(126);
 	(is_bi || execve(sh->cmd_path, sh->crt_cmd, sh->env_tab));
 	if (!is_bi && print_err(3, "minishell: ", \
 	sh->crt_cmd[0], ": command not found\n"))
@@ -67,8 +82,9 @@ void	exec_line(t_shell *sh, char *current, int last_pipe, int first_pipe)
 	sh->crt_cmd = get_cmd_tab(current);
 	sh->crt_redir = str_search(current, "><");
 	sh->crt_redir_filename = get_filename(sh->crt_redir);
-	sh->cmd_path = get_path(sh->crt_cmd[0], get_env_line(sh->env, "PATH="));
-	if (sh->crt_cmd && ACCES(sh->crt_cmd[0]))
+	if (sh->crt_cmd)
+		sh->cmd_path = get_path(sh->crt_cmd[0], get_env_line(sh->env, "PATH="));
+	if (!sh->cmd_path && sh->crt_cmd && acces(sh->crt_cmd[0]))
 		sh->cmd_path = ft_strdup(sh->crt_cmd[0]);
 	while (sh->crt_redir)
 	{
@@ -80,14 +96,14 @@ void	exec_line(t_shell *sh, char *current, int last_pipe, int first_pipe)
 		sh->crt_redir_filename = ft_free(sh->crt_redir_filename);
 		sh->crt_redir_filename = get_filename(sh->crt_redir);
 	}
-	if ((!sh->crt_cmd && !set_error(0)) || (access(sh->cmd_path, X_OK) && \
-	set_error(125 + print_err(3, SH, sh->crt_cmd[0], PERM))))
+	if (!sh->crt_cmd)
 		return ;
 	if (last_pipe && first_pipe)
 		exec_no_pipe(sh);
 	else
 		exec_pipe(sh, last_pipe, first_pipe);
 	sh->crt_cmd = ft_free(sh->crt_cmd);
+	sh->cmd_path = ft_free(sh->cmd_path);
 }
 
 void	loop_exec(t_shell *sh)

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: niespana <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/12 14:31:13 by niespana          #+#    #+#             */
+/*   Updated: 2023/04/12 14:31:14 by niespana         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	has_words(char *s)
@@ -22,7 +34,7 @@ char	**split_trim_redir(char *s)
 
 	len = 0;
 	i = -1;
-	split = split_pipe(s, " ");
+	split = split_pipe(s, " \t");
 	while (split[++i])
 		if (!(str_search(split[i], "><") || (i && \
 		str_search(split[i - 1], "><") && !has_words(split[i - 1]))))
@@ -47,7 +59,7 @@ void	remove_quotes(char **s)
 
 	len = 0;
 	i = -1;
-	free_trim(s, " ");
+	free_trim(s, " \t");
 	while ((*s)[++i])
 	{
 		if (!is_btwn_q((*s), i) && ((*s)[i] == '"' || (*s)[i] == '\''))
@@ -73,13 +85,13 @@ char	**get_cmd_tab(char *s)
 
 	i = -1;
 	if (!str_search(s, "><"))
-		cmd = split_pipe(s, " ");
+		cmd = split_pipe(s, " \t");
 	else
 		cmd = split_trim_redir(s);
 	while (cmd[++i])
-	{
 		remove_quotes(&cmd[i]);
-	}
+	if (!cmd[0])
+		return (ft_free(cmd));
 	return (cmd);
 }
 
